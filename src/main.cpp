@@ -3,18 +3,18 @@
 #include "display.h"
 #include "button.h"
 #include "motor.h"
+
 void setup()
 {
   Serial.begin(9600);
-  displaySetup();
-  buttonSetup();
-
-  displayBootScreen();
+  // displaySetup();
+  // buttonSetup();
+  setupMotors();
+  // displayBootScreen();
 }
 
 void loop()
 {
-
-  int size = sizeof(uint8_t);
-  Serial.println(size);
+  Forward(100, 100);
+  Serial.println("Forward");
 }
