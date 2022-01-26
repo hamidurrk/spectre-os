@@ -33,22 +33,36 @@ void readSensors()
      * Code to read sensor data -> identical to the documentation with some simple modifications
      *
      */
-    for (i = 0; i < numOfSensors; i++)
-    {
-        digitalWrite(sensorPin[i], HIGH);
-        pinMode(sensorPin[i], OUTPUT);
-    }
+    //---------------------------------------------------------------------
+    // for (i = 0; i < numOfSensors; i++)
+    // {
+    //     digitalWrite(sensorPin[i], HIGH);
+    //     pinMode(sensorPin[i], OUTPUT);
+    // }
+    // Equivalent Port Manipulation code
+    PORTF = B11111111;
+    DDRF = B11111111;
+    //-----------------------------------------------------------------------
     delayMicroseconds(10);
+    //----------------------------------------------------------------------
+    // for (i = 0; i < numOfSensors; i++)
+    // {
+    //     pinMode(sensorPin[i], INPUT);
+    //     digitalWrite(sensorPin[i], LOW);
+    //     sensorRawReading[i] = sensorMaxWaitTime;
+    //     firstData[i] = false;
+    // }
     for (i = 0; i < numOfSensors; i++)
     {
-        pinMode(sensorPin[i], INPUT);
-        digitalWrite(sensorPin[i], LOW);
         sensorRawReading[i] = sensorMaxWaitTime;
         firstData[i] = false;
     }
+    DDRF = B00000000;
+    PORTF = B00000000;
+    //-----------------------------------------------------------------------
     unsigned long startTime = micros();
 
-    while (micros() - startTime < sensorMaxWaitTime)
+    while ((micros() - startTime) < sensorMaxWaitTime)
     {
         unsigned int time = micros() - startTime;
         for (i = 0; i < numOfSensors; i++)
@@ -142,4 +156,14 @@ void sensorRetrieveThreshold()
     {
         sensorThreshold[i] = 700;
     }
+}
+
+bool portRead(char port_type, byte pin_number)
+{
+    if (port_type == 'D')
+    {
+        bool reading = (PIND >> pin_number) & 1;
+        return reading;
+    }
+    return 0;
 }
