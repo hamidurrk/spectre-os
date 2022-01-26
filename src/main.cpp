@@ -7,14 +7,14 @@
 void setup()
 {
   Serial.begin(9600);
-  // displaySetup();
-  // buttonSetup();
-  setupMotors();
-  // displayBootScreen();
+  displaySetup();
+  buttonSetup();
+
+  displayBootScreen();
 }
 
 void loop()
 {
-  Forward(100, 100);
-  Serial.println("Forward");
+  displayDrawMenu("MAIN_MENU");
+  displayOptionSelector("MAIN_MENU");
 }

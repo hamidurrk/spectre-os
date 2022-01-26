@@ -1,91 +1,145 @@
-// #include <Arduino.h>
+#include <Arduino.h>
 
-// //---------------------- Connection Related---------------------------------------
-// #define IR_LED 2
-// byte sensorPin[8] = {A7, A6, A5, A4, A3, A2, A1, A0}; // arduino analog pins
-// //---------------------------------------------------------------------------------
+const byte numOfSensors = 8;
+byte i;
+unsigned int sensorMaxWaitTime = 1024;
+boolean firstData[numOfSensors];
+unsigned int sensorRawReading[numOfSensors];
+boolean sensorBinaryReading[numOfSensors];
+unsigned int sensorBinaryData;
 
-// const byte numOfSensors = 8;
-// boolean LED_CONTROL = true; /* put LED_CONTROL = false if you keep "LED ON" {pin disconnected} */
-// int sensorValue[numOfSensors], sensorValueON[numOfSensors], sensorValueOFF[numOfSensors];
+unsigned int sensorThreshold[numOfSensors];
+unsigned int sensorHighestReadings[numOfSensors];
+unsigned int sensorLowestReadings[numOfSensors];
 
-// // External Global Variables
-// extern void Forward(double del, int vel);
-// extern void Stop(double del);
+byte numOfHighReadings;
+//---------------------- Connection Related---------------------------------------
+#define IR_LED 2
+byte sensorPin[numOfSensors] = {A7, A6, A5, A4, A3, A2, A1, A0}; // arduino analog pins
+//---------------------------------------------------------------------------------
 
-// void sensorSetup()
-// {
-//     if (LED_CONTROL)
-//         pinMode(IR_LED, OUTPUT);
-// }
+// External Global Variables
+extern void Forward(double del, int vel);
+extern void Stop(double del);
 
-// void readSensor()
-// {
-//     if (LED_CONTROL)
-//     {
-//         digitalWrite(IR_LED, HIGH); // turn ON IR LEDs
-//         delay(20);                  // give some time to turn ON
-//         for (int i = 0; i < numOfSensors; i++)
-//             sensorValueON[i] =
-//                 analogRead(sensorPin[i]);
-//         digitalWrite(IR_LED, LOW); // turn OFF IR LEDs
-//         delay(20);                 // give some time to turn OFF
-//         for (int i = 0; i < numOfSensors; i++)
-//             sensorValueOFF[i] =
-//                 analogRead(sensorPin[i]);
-//     }
-//     // calculate actual sensor reading
-//     for (int i = 0; i < numOfSensors; i++)
-//     {
-//         if (LED_CONTROL)
-//             sensorValue[i] = sensorValueON[i] - sensorValueOFF[i];
-//         else
-//             sensorValue[i] = analogRead(sensorPin[i]);
-//     }
-// }
+void sensorSetup()
+{
+    sensorRetrieveThreshold();
+}
 
-// void generateBinary()
-// {
+void readSensors()
+{
+    /*
+     * Code to read sensor data -> identical to the documentation with some simple modifications
+     *
+     */
+    for (i = 0; i < numOfSensors; i++)
+    {
+        digitalWrite(sensorPin[i], HIGH);
+        pinMode(sensorPin[i], OUTPUT);
+    }
+    delayMicroseconds(10);
+    for (i = 0; i < numOfSensors; i++)
+    {
+        pinMode(sensorPin[i], INPUT);
+        digitalWrite(sensorPin[i], LOW);
+        sensorRawReading[i] = sensorMaxWaitTime;
+        firstData[i] = false;
+    }
+    unsigned long startTime = micros();
 
-//     sumation = 0;
-//     for (int cx = 0; cx < NumOfSensors; cx++)
-//     {
-//         if (sensor[cx] > threshold[cx])
-//         {
-//             x[cx] = 1;
-//         }
-//         else
-//         {
-//             x[cx] = 0;
-//         }
-//         sumation += x[cx];
-//     }
+    while (micros() - startTime < sensorMaxWaitTime)
+    {
+        unsigned int time = micros() - startTime;
+        for (i = 0; i < numOfSensors; i++)
+        {
+            if ((digitalRead(sensorPin[i]) == LOW) && (firstData[i] == false))
+            {
+                sensorRawReading[i] = time;
+                firstData[i] = true;
+            }
+        }
+    }
+}
 
-//     sensorData = 0;
+void showRawSensorData()
+{
+    readSensors();
+    for (i = 0; i < numOfSensors; i++)
+    {
+        Serial.print(sensorRawReading[i]);
+        Serial.print(" ");
+    }
+    Serial.println();
+}
 
-//     for (int cxx = 0; cxx < NumOfSensors; cxx++)
-//     {
-//         sensorData = (sensorData << 1) | x[cxx];
-//     }
-// }
+void showBinarySensorData()
+{
+    readSensors();
+    generateBinary();
+    for (i = 0; i < numOfSensors; i++)
+    {
+        Serial.print(sensorBinaryReading[i]);
+        Serial.print(" ");
+    }
+    Serial.println();
+}
+void generateBinary()
+{
+    /*
+     * Generates a 8 bit binary value from the sensor reading
+     */
+    numOfHighReadings = 0;
+    sensorBinaryData = 0;
+    for (int i = 0; i < numOfSensors; i++)
+    {
+        if (sensorRawReading[i] > sensorThreshold[i])
+        {
+            sensorBinaryReading[i] = 1;
+            sensorBinaryData = (sensorBinaryData << 1) | 1;
+        }
+        else
+        {
+            sensorBinaryReading[i] = 0;
+            sensorBinaryData = (sensorBinaryData << 1);
+        }
+        numOfHighReadings += sensorBinaryReading[i];
+    }
+}
 
-// void generateThreshold()
-// {
-//     for (int th = 0; th < 300; th++)
-//     {
-//         Forward(1, 100);
-//         readSensors();
-//         for (int sense = 0; sense < NumOfSensors; sense++)
-//         {
-//             if (sensor[sense] > t1[sense])
-//                 t1[sense] = sensor[sense];
-//             if (sensor[sense] < t2[sense])
-//                 t2[sense] = sensor[sense];
-//         }
-//     }
-//     for (int thr = 0; thr < NumOfSensors; thr++)
-//     {
-//         threshold[thr] = (t1[thr] + t2[thr]) / 2;
-//     }
-//     Stop(10);
-// }
+void generateThreshold()
+{
+    /*
+     * For generating threshold value
+     */
+    for (int fill_i = 0; fill_i < numOfSensors; fill_i++)
+    {
+        sensorHighestReadings[fill_i] = 0;
+        sensorLowestReadings[fill_i] = 0;
+    }
+    for (int th_i = 0; th_i < 300; th_i++)
+    {
+        Forward(1, 100);
+        readSensors();
+        for (int sense = 0; sense < numOfSensors; sense++)
+        {
+            if (sensorRawReading[sense] > sensorHighestReadings[sense])
+                sensorHighestReadings[sense] = sensorRawReading[sense];
+            if (sensorRawReading[sense] < sensorLowestReadings[sense])
+                sensorLowestReadings[sense] = sensorRawReading[sense];
+        }
+    }
+    for (int thr = 0; thr < numOfSensors; thr++)
+    {
+        sensorThreshold[thr] = (sensorHighestReadings[thr] + sensorLowestReadings[thr]) / 2;
+    }
+    Stop(10);
+}
+
+void sensorRetrieveThreshold()
+{
+    for (i = 0; i < numOfSensors; i++)
+    {
+        sensorThreshold[i] = 700;
+    }
+}

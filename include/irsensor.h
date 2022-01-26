@@ -4,5 +4,7 @@
 void readSensors();
 void generateBinary();
 void generateThreshold();
+void showRawSensorData();
+void sensorRetrieveThreshold();
 
 #endif //_IR_SENSOR
