@@ -3,6 +3,7 @@
 
 #include <Arduino.h>
 
+void sensorSetup();
 void readSensors();
 void generateBinary();
 void generateThreshold();

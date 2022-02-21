@@ -4,14 +4,20 @@
 
 const int memoryLength = 500;
 int memoryArray[memoryLength];
+struct Memory
+{
+    int position;
+    int size;
+    int *arr;
+};
 Memory sensorMemory;
 
 //------------- External Global Variables -------------------------
 extern float motorVariables[4];
 const int numOfSensors = 8;
-extern unsigned int sensorThreshold[numOfSensors];
+extern int sensorThreshold[numOfSensors];
 
-void initializeMemory(struct Memory *m)
+void memorySetup(struct Memory *m)
 {
     m->size = memoryLength;
     m->position = 0;
@@ -62,6 +68,6 @@ void memoryRetrieveSensorVariables()
 {
     for (int i = 0; i < numOfSensors; i++)
     {
-        EEPROM.get(i * (sizeof(int)), sensorThreshold[i]);
+        EEPROM.get(16 + i * (sizeof(int)), sensorThreshold[i]);
     }
 }

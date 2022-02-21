@@ -5,13 +5,13 @@ static const byte numOfSensors = 8;
 static byte i;
 static unsigned int sensorMaxWaitTime = 1024;
 static boolean firstData[numOfSensors];
-unsigned int sensorRawReading[numOfSensors];
+int sensorRawReading[numOfSensors];
 boolean sensorBinaryReading[numOfSensors];
 unsigned int sensorBinaryData;
 
-unsigned int sensorThreshold[numOfSensors] = {700, 700, 700, 700, 700, 700, 700, 700};
-static unsigned int sensorHighestReadings[numOfSensors];
-static unsigned int sensorLowestReadings[numOfSensors];
+int sensorThreshold[numOfSensors] = {700, 700, 700, 700, 700, 700, 700, 700};
+static int sensorHighestReadings[numOfSensors];
+static int sensorLowestReadings[numOfSensors];
 
 byte numOfHighReadings;
 //---------------------- Connection Related---------------------------------------
@@ -19,7 +19,7 @@ byte numOfHighReadings;
 static byte sensorPin[numOfSensors] = {7, 6, 5, 4, 3, 2, 1, 0}; // arduino analog pins
 //---------------------------------------------------------------------------------
 
-// External Global Variables
+// ------------------------------External Global Variables----------------------------
 extern void Forward(double del, int vel);
 extern void Stop(double del);
 extern void memoryRetrieveSensorVariables();
@@ -136,6 +136,7 @@ void generateThreshold()
     /*
      * For generating threshold value
      */
+    Serial.println("Generate Threshold");
     for (int fill_i = 0; fill_i < numOfSensors; fill_i++)
     {
         sensorHighestReadings[fill_i] = 0;
@@ -158,6 +159,7 @@ void generateThreshold()
         sensorThreshold[thr] = (sensorHighestReadings[thr] + sensorLowestReadings[thr]) / 2;
     }
     Stop(10);
+    memorySaveSensorVariables();
 }
 
 bool portRead(char port_type, byte pin_number)
@@ -175,23 +177,3 @@ bool portRead(char port_type, byte pin_number)
     }
     return 0;
 }
-// void save_threshold(int threshold[8])
-// {
-//   for (int threshold_iterator = 0; threshold_iterator < 8; threshold_iterator++)
-//   {
-//     byte first_half = B00000000;
-//     byte second_half = B00000000;
-//     first_half = (threshold[threshold_iterator] >> 8) | first_half;
-//     second_half = (threshold[threshold_iterator] & B11111111) | second_half;
-//     EEPROM.write(threshold_iterator * 2 + 1, first_half);
-//     EEPROM.write(threshold_iterator * 2 + 2, second_half);
-//   }
-// }
-// //---------------------------------------------------------------------------------------
-// void retrieve_threshold()
-// {
-//   for (int threshold_iterator = 0; threshold_iterator < 8; threshold_iterator++)
-//   {
-//     threshold[threshold_iterator] = (EEPROM.read(threshold_iterator * 2 + 1) << 8) | (EEPROM.read(threshold_iterator * 2 + 2));
-//   }
-// }

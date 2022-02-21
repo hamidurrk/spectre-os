@@ -26,11 +26,12 @@ extern void readSensors();
 extern void generateBinary();
 extern boolean sensorBinaryReading[numOfSensors];
 extern String buttonPressed();
+extern void memoryRetrieveMotorVariables();
 extern double PIDvalue;
 extern double Vul;
 //-------------------------------------------------------------------
 
-void setupMotors()
+void motorSetup()
 {
     pinMode(R_MTR_PWM, OUTPUT);
     pinMode(R_MTR_IN_1, OUTPUT);
@@ -40,6 +41,7 @@ void setupMotors()
     pinMode(L_MTR_IN_1, OUTPUT);
     pinMode(L_MTR_IN_2, OUTPUT);
     digitalWrite(MTR_STBY, HIGH);
+    memoryRetrieveMotorVariables();
 }
 //---------------------------------------------------------------------------------------
 void motorTestAuto()
@@ -167,7 +169,7 @@ void BreakR()
         Right(1, i);
     }
     Stop(20);
-} //
+}
 //------------------------------Sharp Turn Functions------------------------------------------
 void Tleft()
 {

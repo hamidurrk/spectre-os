@@ -7,26 +7,29 @@
 #include "memory.h"
 
 //------------ Global variables --------------------
-extern Memory sensorMemory;
+extern struct Memory sensorMemory;
 const int numOfSensors = 8;
 extern unsigned int sensorThreshold[numOfSensors];
+extern float motorVariables[4];
 
 void setup()
 {
   Serial.begin(9600);
   displaySetup();
   buttonSetup();
-  initializeMemory(&sensorMemory);
+  memorySetup(&sensorMemory);
+
+  // Only Once needed
+  // memorySaveMotorVariables();
+  // memorySaveSensorVariables();
+
+  sensorSetup();
+  motorSetup();
 
   displayBootScreen();
 }
 
 void loop()
 {
-  for (int x = 0; x < 8; x++)
-  {
-    Serial.print(sensorThreshold[x]);
-    Serial.print(" ");
-  }
-  Serial.println();
+  displayMenu("MAIN_MENU");
 }

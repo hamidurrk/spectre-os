@@ -13,11 +13,20 @@ Adafruit_SSD1306 display(SCREEN_WIDTH, SCREEN_HEIGHT, &Wire, OLED_RESET);
 
 // External Functions in use
 extern String buttonPressed();
+//--------- External important functions---------------------------------------------------------
+extern void memorySaveMotorVariables();
+extern void generateThreshold();
+//--------- External important variables----------------------------------------------------------
 extern float motorVariables[4];
 extern float &motorSpeed;
 extern float &P;
 extern float &I;
 extern float &D;
+const int numOfSensors = 8;
+extern int sensorThreshold[numOfSensors];
+extern int sensorRawReading[numOfSensors];
+extern boolean sensorBinaryReading[numOfSensors];
+
 // Global variables related to Option Selector
 int optX = 2;
 int optY = 2;
@@ -44,6 +53,67 @@ const char *sensorMenuOptions[6] = {
     "S_R_RAW",
     "",
     "BACK"};
+
+void optionHandler(String option)
+{
+    if (option == "SAVE")
+    {
+        display.clearDisplay();
+        display.display();
+        memorySaveMotorVariables();
+    }
+    else if (option == "G_THRESHOLD")
+    {
+        display.clearDisplay();
+        display.display();
+        generateThreshold();
+    }
+    else if (option == "V_THRESHOLD")
+    {
+        display.clearDisplay();
+        display.display();
+        delay(300);
+        while (true)
+        {
+            displayDrawMenu("SENSOR_THRESHOLD_MENU");
+            if (buttonPressed() != "NO")
+            {
+                break;
+            }
+        }
+        delay(200);
+    }
+    else if (option == "S_R_RAW")
+    {
+        display.clearDisplay();
+        display.display();
+        delay(300);
+        while (true)
+        {
+            displayDrawMenu("SENSOR_RAW_MENU");
+            if (buttonPressed() != "NO")
+            {
+                break;
+            }
+        }
+        delay(200);
+    }
+    else if (option == "S_R_BIN")
+    {
+        display.clearDisplay();
+        display.display();
+        delay(300);
+        while (true)
+        {
+            displayDrawMenu("SENSOR_BINARY_MENU");
+            if (buttonPressed() != "NO")
+            {
+                break;
+            }
+        }
+        delay(200);
+    }
+}
 
 void displaySetup()
 {
@@ -144,7 +214,57 @@ void displayDrawMenu(String menuType)
             display.println(sensorMenuOptions[optionsIterator]); // Print from the cursor position
         }
     }
-
+    else if (menuType == "SENSOR_THRESHOLD_MENU")
+    {
+        display.drawLine(0, 0, 0, display.height() - 5, SSD1306_WHITE);
+        display.drawLine(10, 0, 10, display.height() - 5, SSD1306_WHITE);
+        display.drawLine(display.width() / 2, 0, display.width() / 2, display.height() - 5, SSD1306_WHITE);
+        display.drawLine(display.width() - 1, 0, display.width() - 1, display.height() - 5, SSD1306_WHITE);
+        display.drawLine(display.width() - 11, 0, display.width() - 11, display.height() - 5, SSD1306_WHITE);
+        display.setTextSize(1);
+        display.setTextColor(SSD1306_WHITE);
+        for (int optionsIterator = 0; optionsIterator < numOfSensors / 2; optionsIterator++, y += 10)
+        {
+            display.setCursor(x, y);                           // Set the cursor position . The top left position is 0,0
+            display.println(sensorThreshold[optionsIterator]); // Print from the cursor position
+            display.setCursor(display.width() / 2 + 4, y);
+            display.println(sensorThreshold[(numOfSensors - 1) - optionsIterator]);
+        }
+    }
+    else if (menuType == "SENSOR_RAW_MENU")
+    {
+        display.drawLine(0, 0, 0, display.height() - 5, SSD1306_WHITE);
+        display.drawLine(10, 0, 10, display.height() - 5, SSD1306_WHITE);
+        display.drawLine(display.width() / 2, 0, display.width() / 2, display.height() - 5, SSD1306_WHITE);
+        display.drawLine(display.width() - 1, 0, display.width() - 1, display.height() - 5, SSD1306_WHITE);
+        display.drawLine(display.width() - 11, 0, display.width() - 11, display.height() - 5, SSD1306_WHITE);
+        display.setTextSize(1);
+        display.setTextColor(SSD1306_WHITE);
+        for (int optionsIterator = 0; optionsIterator < numOfSensors / 2; optionsIterator++, y += 10)
+        {
+            display.setCursor(x, y);                            // Set the cursor position . The top left position is 0,0
+            display.println(sensorRawReading[optionsIterator]); // Print from the cursor position
+            display.setCursor(display.width() / 2 + 4, y);
+            display.println(sensorRawReading[(numOfSensors - 1) - optionsIterator]);
+        }
+    }
+    else if (menuType == "SENSOR_BINARY_MENU")
+    {
+        display.drawLine(0, 0, 0, display.height() - 5, SSD1306_WHITE);
+        display.drawLine(10, 0, 10, display.height() - 5, SSD1306_WHITE);
+        display.drawLine(display.width() / 2, 0, display.width() / 2, display.height() - 5, SSD1306_WHITE);
+        display.drawLine(display.width() - 1, 0, display.width() - 1, display.height() - 5, SSD1306_WHITE);
+        display.drawLine(display.width() - 11, 0, display.width() - 11, display.height() - 5, SSD1306_WHITE);
+        display.setTextSize(1);
+        display.setTextColor(SSD1306_WHITE);
+        for (int optionsIterator = 0; optionsIterator < numOfSensors / 2; optionsIterator++, y += 10)
+        {
+            display.setCursor(x, y);                               // Set the cursor position . The top left position is 0,0
+            display.println(sensorBinaryReading[optionsIterator]); // Print from the cursor position
+            display.setCursor(display.width() / 2 + 4, y);
+            display.println(sensorBinaryReading[(numOfSensors - 1) - optionsIterator]);
+        }
+    }
     display.display();
 }
 
@@ -219,6 +339,11 @@ void displayOptionSelector(String menuType)
                         delay(300);
                         return;
                     }
+                    else
+                    {
+                        optionHandler(PIDoptions[optY / 10]);
+                        delay(300);
+                    }
                 }
                 displayDrawMenu("PID_MENU");
                 display.drawRect(optX, optY, optH, optH, SSD1306_WHITE);
@@ -255,6 +380,11 @@ void displayOptionSelector(String menuType)
                     {
                         delay(300);
                         return;
+                    }
+                    else
+                    {
+                        optionHandler(sensorMenuOptions[optY / 10]);
+                        delay(300);
                     }
                 }
                 displayDrawMenu("SENSOR_MENU");
