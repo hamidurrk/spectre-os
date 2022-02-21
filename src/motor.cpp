@@ -13,15 +13,21 @@
 #define MTR_STBY 5
 //-------------------------------------------------------------------------
 
-double motorVariables[4] = {180.0, 4.2, 0, 11.6};
-double motorSpeed = motorVariables[0];
-double &P = motorVariables[1];
-double &I = motorVariables[2];
-double &D = motorVariables[3];
-
+float motorVariables[4] = {180.0, 4.2, 0, 11.6};
+float &motorSpeed = motorVariables[0];
+float &P = motorVariables[1];
+float &I = motorVariables[2];
+float &D = motorVariables[3];
+const byte numOfSensors = 8;
+int R_motorSpeed = 150;
+int L_motorSpeed = 150;
 //------------ External variables+functions used here-----------------
 extern void readSensors();
 extern void generateBinary();
+extern boolean sensorBinaryReading[numOfSensors];
+extern String buttonPressed();
+extern double PIDvalue;
+extern double Vul;
 //-------------------------------------------------------------------
 
 void setupMotors()
@@ -35,18 +41,52 @@ void setupMotors()
     pinMode(L_MTR_IN_2, OUTPUT);
     digitalWrite(MTR_STBY, HIGH);
 }
-
-void motorTest()
+//---------------------------------------------------------------------------------------
+void motorTestAuto()
 {
+    // Motor Forward Test
     analogWrite(R_MTR_PWM, 100);
     digitalWrite(R_MTR_IN_1, HIGH);
     digitalWrite(R_MTR_IN_2, LOW);
     delay(1000);
+    analogWrite(R_MTR_PWM, 0);
+
     analogWrite(L_MTR_PWM, 100);
     digitalWrite(L_MTR_IN_1, HIGH);
     digitalWrite(L_MTR_IN_2, LOW);
-}
+    delay(1000);
+    analogWrite(L_MTR_PWM, 0);
 
+    // Motor backward test
+    analogWrite(R_MTR_PWM, 100);
+    digitalWrite(R_MTR_IN_1, LOW);
+    digitalWrite(R_MTR_IN_2, HIGH);
+    delay(1000);
+    analogWrite(R_MTR_PWM, 0);
+
+    analogWrite(L_MTR_PWM, 100);
+    digitalWrite(L_MTR_IN_1, LOW);
+    digitalWrite(L_MTR_IN_2, HIGH);
+    delay(1000);
+    analogWrite(L_MTR_PWM, 0);
+}
+//---------------------------------------------------------------------------------------
+void motorCalibrate()
+{
+    while (true)
+    {
+        analogWrite(R_MTR_PWM, R_motorSpeed);
+        analogWrite(L_MTR_PWM, L_motorSpeed);
+        digitalWrite(R_MTR_IN_1, HIGH);
+        digitalWrite(R_MTR_IN_2, LOW);
+        digitalWrite(L_MTR_IN_1, HIGH);
+        digitalWrite(L_MTR_IN_2, LOW);
+        delay(50);
+        if (buttonPressed() != "NO")
+            break;
+    }
+}
+//----------------------------------------------------------------------------------------
 void Forward(double del, int vel)
 {
     analogWrite(R_MTR_PWM, vel);
@@ -101,32 +141,34 @@ void Stop(double del)
     digitalWrite(L_MTR_IN_2, LOW);
     delay(del);
 }
-//---------------------------------Breaking functions--------------------------------------
+// //---------------------------------Breaking functions--------------------------------------
 void BreakF()
 {
-    Stop(10);
-    Backward(80, 250);
-    Stop(10);
+    for (int i = 100; i >= 0; i -= 5)
+    {
+        Forward(1, i);
+    }
+    Stop(20);
 }
-//-----------------------------------------------------------------------------------------
+// //-----------------------------------------------------------------------------------------
 void BreakL()
 {
-    Stop(10);
-    Right(50, 250);
-    Stop(10);
-    // Right(40, 200);
-    // Stop(10);
+    for (int i = 100; i >= 0; i -= 5)
+    {
+        Left(1, i);
+    }
+    Stop(20);
 }
-//-----------------------------------------------------------------------------------------
+// //-----------------------------------------------------------------------------------------
 void BreakR()
 {
-    Stop(10);
-    Left(50, 250);
-    Stop(10);
-    // Left(40, 200);
-    // Stop(10);
-}
-//----------------------------------------------------------------------------------------
+    for (int i = 100; i >= 0; i -= 5)
+    {
+        Right(1, i);
+    }
+    Stop(20);
+} //
+//------------------------------Sharp Turn Functions------------------------------------------
 void Tleft()
 {
     BreakF();
@@ -135,14 +177,14 @@ void Tleft()
         Left(10, 240);
         readSensors();
         generateBinary();
-        if (x[0] == 1 || x[1] == 1)
+        if (sensorBinaryReading[0] == 1 || sensorBinaryReading[1] == 1)
         {
             while (true)
             {
                 Left(10, 50);
                 readSensors();
                 generateBinary();
-                if (x[3] == 1 || x[4] == 1)
+                if (sensorBinaryReading[3] == 1 || sensorBinaryReading[4] == 1)
                 {
                     BreakL();
                     break;
@@ -152,7 +194,7 @@ void Tleft()
         }
     }
 }
-//----------------------------------------------------------------------------------------
+// //----------------------------------------------------------------------------------------
 void Tright()
 {
     BreakF();
@@ -161,14 +203,14 @@ void Tright()
         Right(10, 240);
         readSensors();
         generateBinary();
-        if (x[6] == 1 || x[7] == 1)
+        if (sensorBinaryReading[6] == 1 || sensorBinaryReading[7] == 1)
         {
             while (true)
             {
                 Right(10, 50);
                 readSensors();
                 generateBinary();
-                if (x[3] == 1 || x[4] == 1)
+                if (sensorBinaryReading[3] == 1 || sensorBinaryReading[4] == 1)
                 {
                     BreakR();
                     break;
@@ -177,4 +219,35 @@ void Tright()
             break;
         }
     }
+}
+
+void doura()
+{
+    if (Vul > 0)
+    {
+        R_motorSpeed = motorSpeed - PIDvalue;
+        L_motorSpeed = motorSpeed;
+    }
+    else if (Vul < 0)
+    {
+        L_motorSpeed = motorSpeed + PIDvalue;
+        R_motorSpeed = motorSpeed;
+    }
+    else
+    {
+        R_motorSpeed = motorSpeed;
+        L_motorSpeed = motorSpeed;
+    }
+
+    if (R_motorSpeed < 5)
+        R_motorSpeed = 5;
+    if (L_motorSpeed < 5)
+        L_motorSpeed = 5;
+
+    analogWrite(R_MTR_PWM, R_motorSpeed);
+    analogWrite(L_MTR_PWM, L_motorSpeed);
+    digitalWrite(R_MTR_IN_1, HIGH);
+    digitalWrite(L_MTR_IN_1, HIGH);
+    digitalWrite(R_MTR_IN_2, LOW);
+    digitalWrite(L_MTR_IN_2, LOW);
 }

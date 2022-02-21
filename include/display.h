@@ -5,7 +5,7 @@
 void displaySetup();
 void displayBootScreen();
 void displayDrawMenu(String menuType); // Draw many lines
-void displayPIDmenu();
+void displayMenu(String menuType);
 void displayOptionSelector(String menuType);
 //
 //

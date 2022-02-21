@@ -1,8 +1,10 @@
 #ifndef _MOTOR_CONTROL
 #define _MOTOR_CONTROL
 
-void Forward(double del, int vel);
 void setupMotors();
+void motorTestAuto();
+void motorCalibrate();
+void Forward(double del, int vel);
 void Backward(double del, int vel);
 void Right(double del, int vel);
 void Left(double del, int vel);

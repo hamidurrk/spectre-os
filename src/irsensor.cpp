@@ -1,30 +1,35 @@
 #include <Arduino.h>
+#include "irsensor.h"
 
-const byte numOfSensors = 8;
-byte i;
-unsigned int sensorMaxWaitTime = 1024;
-boolean firstData[numOfSensors];
+static const byte numOfSensors = 8;
+static byte i;
+static unsigned int sensorMaxWaitTime = 1024;
+static boolean firstData[numOfSensors];
 unsigned int sensorRawReading[numOfSensors];
 boolean sensorBinaryReading[numOfSensors];
 unsigned int sensorBinaryData;
 
-unsigned int sensorThreshold[numOfSensors];
-unsigned int sensorHighestReadings[numOfSensors];
-unsigned int sensorLowestReadings[numOfSensors];
+unsigned int sensorThreshold[numOfSensors] = {700, 700, 700, 700, 700, 700, 700, 700};
+static unsigned int sensorHighestReadings[numOfSensors];
+static unsigned int sensorLowestReadings[numOfSensors];
 
 byte numOfHighReadings;
 //---------------------- Connection Related---------------------------------------
 #define IR_LED 2
-byte sensorPin[numOfSensors] = {A7, A6, A5, A4, A3, A2, A1, A0}; // arduino analog pins
+static byte sensorPin[numOfSensors] = {7, 6, 5, 4, 3, 2, 1, 0}; // arduino analog pins
 //---------------------------------------------------------------------------------
 
 // External Global Variables
 extern void Forward(double del, int vel);
 extern void Stop(double del);
+extern void memoryRetrieveSensorVariables();
+extern void memorySaveSensorVariables();
+extern struct Memory sensorMemory;
+extern void memoryAddReading(struct Memory *m, int reading);
 
 void sensorSetup()
 {
-    sensorRetrieveThreshold();
+    memoryRetrieveSensorVariables();
 }
 
 void readSensors()
@@ -67,10 +72,14 @@ void readSensors()
         unsigned int time = micros() - startTime;
         for (i = 0; i < numOfSensors; i++)
         {
-            if ((digitalRead(sensorPin[i]) == LOW) && (firstData[i] == false))
+            if ((portRead('F', sensorPin[i]) == LOW) && (firstData[i] == false))
             {
                 sensorRawReading[i] = time;
                 firstData[i] = true;
+                if (PINF == B00000000)
+                {
+                    break;
+                }
             }
         }
     }
@@ -119,6 +128,7 @@ void generateBinary()
         }
         numOfHighReadings += sensorBinaryReading[i];
     }
+    memoryAddReading(&sensorMemory, sensorBinaryData);
 }
 
 void generateThreshold()
@@ -150,20 +160,38 @@ void generateThreshold()
     Stop(10);
 }
 
-void sensorRetrieveThreshold()
-{
-    for (i = 0; i < numOfSensors; i++)
-    {
-        sensorThreshold[i] = 700;
-    }
-}
-
 bool portRead(char port_type, byte pin_number)
 {
+    bool reading;
     if (port_type == 'D')
     {
-        bool reading = (PIND >> pin_number) & 1;
+        reading = (PIND >> pin_number) & 1;
+        return reading;
+    }
+    else if (port_type == 'F')
+    {
+        reading = (PINF >> pin_number) & 1;
         return reading;
     }
     return 0;
 }
+// void save_threshold(int threshold[8])
+// {
+//   for (int threshold_iterator = 0; threshold_iterator < 8; threshold_iterator++)
+//   {
+//     byte first_half = B00000000;
+//     byte second_half = B00000000;
+//     first_half = (threshold[threshold_iterator] >> 8) | first_half;
+//     second_half = (threshold[threshold_iterator] & B11111111) | second_half;
+//     EEPROM.write(threshold_iterator * 2 + 1, first_half);
+//     EEPROM.write(threshold_iterator * 2 + 2, second_half);
+//   }
+// }
+// //---------------------------------------------------------------------------------------
+// void retrieve_threshold()
+// {
+//   for (int threshold_iterator = 0; threshold_iterator < 8; threshold_iterator++)
+//   {
+//     threshold[threshold_iterator] = (EEPROM.read(threshold_iterator * 2 + 1) << 8) | (EEPROM.read(threshold_iterator * 2 + 2));
+//   }
+// }
