@@ -6,6 +6,7 @@
 #include "irsensor.h"
 #include "memory.h"
 
+// Abandoned Project :)
 //------------ Global variables --------------------
 extern struct Memory sensorMemory;
 const int numOfSensors = 8;
