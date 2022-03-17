@@ -71,7 +71,7 @@ void displayBootScreen()
     display.clearDisplay();
     display.setTextSize(2);
     display.setTextColor(SSD1306_WHITE);
-    display.setCursor(20, (SCREEN_HEIGHT / 2));
+    display.setCursor(20, (SCREEN_HEIGHT / 3));
     display.println(F("THUNDER"));
     display.display();
     delay(1000);
