@@ -180,8 +180,11 @@ void displayDrawMenu(String menuType)
     {
         display.setTextSize(1); // Set the text size
         display.setTextColor(SSD1306_WHITE);
-        display.setCursor(20, SCREEN_HEIGHT / 3);
+        display.setCursor(left_padding, SCREEN_HEIGHT / 3);
         display.println(PIDoptions[optionsIterator]);
+        display.setCursor(left_padding, SCREEN_HEIGHT / 2);
+        if (optionsIterator < 4)
+            display.println(motorVariables[optionsIterator]);
     }
     else if (menuType == "SENSOR_MENU")
     {
@@ -323,10 +326,6 @@ void displayOptionSelector(String menuType)
                     }
                 }
                 displayDrawMenu("PID_MENU");
-                display.drawRect(optX, optY, optH, optH, SSD1306_WHITE);
-                display.fillRect(optX, optY, optH, optH, SSD1306_WHITE);
-                display.drawRect((SCREEN_WIDTH - 11 + optX), optY, optH, optH, SSD1306_WHITE);
-                display.fillRect((SCREEN_WIDTH - 11 + optX), optY, optH, optH, SSD1306_WHITE);
                 display.display();
                 delay(300);
             }
