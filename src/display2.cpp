@@ -80,6 +80,13 @@ void displayBootScreen()
     delay(500);
 }
 
+void displayMenu(String menu_type)
+{
+    delay(300);
+    displayDrawMenu(menu_type);
+    displayOptionSelector(menu_type);
+}
+
 void optionHandler(String option)
 {
     if (option == "SAVE")
