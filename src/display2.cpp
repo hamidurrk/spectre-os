@@ -159,6 +159,7 @@ void displayDrawMenu(String menuType)
 {
     int x = 14;
     int y = 2;
+    int left_padding = 25;
     display.clearDisplay();
     display.display();
     // Draw Horizontal line
@@ -172,21 +173,21 @@ void displayDrawMenu(String menuType)
         // Drawing the gridlines
         display.setTextSize(1); // Set the text size
         display.setTextColor(SSD1306_WHITE);
-        display.setCursor(10, SCREEN_HEIGHT / 1.5);
+        display.setCursor(left_padding, SCREEN_HEIGHT / 3);
         display.println(mainMenuOptions[optionsIterator]);
     }
     else if (menuType == "PID_MENU")
     {
         display.setTextSize(1); // Set the text size
         display.setTextColor(SSD1306_WHITE);
-        display.setCursor(10, SCREEN_HEIGHT / 1.5);
+        display.setCursor(20, SCREEN_HEIGHT / 3);
         display.println(PIDoptions[optionsIterator]);
     }
     else if (menuType == "SENSOR_MENU")
     {
         display.setTextSize(1); // Set the text size
         display.setTextColor(SSD1306_WHITE);
-        display.setCursor(10, SCREEN_HEIGHT / 1.5);
+        display.setCursor(left_padding, SCREEN_HEIGHT / 3);
         display.println(sensorMenuOptions[optionsIterator]);
     }
     else if (menuType == "SENSOR_THRESHOLD_MENU")
