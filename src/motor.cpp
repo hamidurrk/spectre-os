@@ -53,7 +53,7 @@ void motorTestAuto()
     digitalWrite(R_MTR_IN_1, HIGH);
     digitalWrite(R_MTR_IN_2, LOW);
     delay(1000);
-    
+
     digitalWrite(R_MTR_IN_1, LOW);
     digitalWrite(R_MTR_IN_2, LOW);
 
@@ -80,7 +80,6 @@ void motorTestAuto()
     digitalWrite(L_MTR_IN_2, LOW);
 
     delay(100);
-    
 }
 //---------------------------------------------------------------------------------------
 void motorCalibrate()
@@ -264,7 +263,8 @@ void doura()
     digitalWrite(L_MTR_IN_2, LOW);
 }
 
-void Run(){
+void Run()
+{
     readSensors();
     generateBinary();
     deviation();
