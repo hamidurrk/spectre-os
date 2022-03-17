@@ -267,20 +267,22 @@ void displayOptionSelector(String menuType)
                 {
                     optionsIterator--;
                 }
-                else if (buttonInstruction == "BTN_SELECT")
+                else if (buttonInstruction == "BTN_SELECT" && optionsIterator < 5)
                 {
-                    // if (mainMenuOptions[optY / 10] == "RUN")
-                    // {
-                    //     display.clearDisplay();
-                    //     display.display();
-                    //     while (true)
-                    //     {
-                    //         Run();
-                    //         if (buttonPressed() != "NO")
-                    //             break;
-                    //     }
-                    // }
+
                     displayMenu(mainMenuOptions[optionsIterator]);
+                }
+                else if (buttonInstruction == "BTN_SELECT" && optionsIterator == 5)
+                {
+
+                    display.clearDisplay();
+                    display.display();
+                    while (true)
+                    {
+                        Run();
+                        if (buttonPressed() != "NO")
+                            break;
+                    }
                 }
                 displayDrawMenu("MAIN_MENU");
                 display.display();
