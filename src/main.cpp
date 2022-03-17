@@ -5,6 +5,7 @@
 #include "motor.h"
 #include "irsensor.h"
 #include "memory.h"
+#include "sonar.h"
 
 //------------ Global variables --------------------
 extern struct Memory sensorMemory;
@@ -23,6 +24,7 @@ void setup()
 
   sensorSetup();
   motorSetup();
+  sonarSetup();
 
   displayBootScreen();
   //------------------------------------------------------------

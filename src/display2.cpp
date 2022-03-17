@@ -20,6 +20,7 @@ extern void generateThreshold();
 extern void readSensors();
 extern void generateBinary();
 extern void Run();
+extern double sonarSearch();
 //--------- External important variables----------------------------------------------------------
 extern float motorVariables[4];
 extern float &motorSpeed;
@@ -243,6 +244,13 @@ void displayDrawMenu(String menuType)
             display.setCursor(display.width() / 2 + 4, y);
             display.println(sensorBinaryReading[(numOfSensors - 1) - optionsIterator]);
         }
+    }
+    else if (menuType == "SONAR_MENU")
+    {
+        display.setTextSize(1); // Set the text size
+        display.setTextColor(SSD1306_WHITE);
+        display.setCursor(left_padding, SCREEN_HEIGHT / 3);
+        display.println(sonarSearch());
     }
     display.display();
 }
