@@ -7,9 +7,10 @@
 #define SCREEN_HEIGHT 64 // OLED display height, in pixels
 
 // On an arduino MEGA 2560: 20(SDA), 21(SCL)
-#define OLED_RESET 4        // Reset pin # (or -1 if sharing Arduino reset pin)
+#define OLED_RESET 10       // Reset pin # (or -1 if sharing Arduino reset pin)
 #define SCREEN_ADDRESS 0x3D ///< See datasheet for Address; 0x3D for 128x64, 0x3C for 128x32
-Adafruit_SSD1306 display(SCREEN_WIDTH, SCREEN_HEIGHT, &Wire, OLED_RESET);
+// Adafruit_SSD1306 display(SCREEN_WIDTH, SCREEN_HEIGHT, &Wire, OLED_RESET);
+Adafruit_SSD1306 display(OLED_RESET);
 
 // External Functions in use
 extern String buttonPressed();
@@ -18,6 +19,7 @@ extern void memorySaveMotorVariables();
 extern void generateThreshold();
 extern void readSensors();
 extern void generateBinary();
+extern void Run();
 //--------- External important variables----------------------------------------------------------
 extern float motorVariables[4];
 extern float &motorSpeed;
@@ -56,6 +58,13 @@ const char *sensorMenuOptions[6] = {
     "",
     "BACK"};
 
+void displaySetup()
+{
+    Wire.begin();
+    display.begin(SSD1306_SWITCHCAPVCC, 0x3C);
+    display.setTextColor(WHITE);
+    //display.setTextSize(1);
+}
 void optionHandler(String option)
 {
     if (option == "SAVE")
@@ -124,23 +133,13 @@ void optionHandler(String option)
     }
 }
 
-void displaySetup()
-{
-    if (!display.begin(SSD1306_SWITCHCAPVCC, SCREEN_ADDRESS))
-    {
-        Serial.println(F("SSD1306 allocation failed"));
-        for (;;)
-            ; // Don't proceed, loop forever
-    }
-}
-
 void displayBootScreen()
 {
 
     display.clearDisplay();
     display.setTextSize(2);
     display.setTextColor(SSD1306_WHITE);
-    display.setCursor(20, 25);
+    display.setCursor(20, 12);
     display.println(F("THUNDER"));
     display.display();
     delay(1000);
@@ -302,6 +301,17 @@ void displayOptionSelector(String menuType)
                 }
                 else if (buttonInstruction == "BTN_SELECT" && optY >= 2 && optY <= display.height() - 10)
                 {
+                    // if (mainMenuOptions[optY / 10] == "RUN")
+                    // {
+                    //     display.clearDisplay();
+                    //     display.display();
+                    //     while (true)
+                    //     {
+                    //         Run();
+                    //         if (buttonPressed() != "NO")
+                    //             break;
+                    //     }
+                    // }
                     displayMenu(mainMenuOptions[optY / 10]);
                 }
                 displayDrawMenu("MAIN_MENU");

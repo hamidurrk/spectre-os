@@ -27,6 +27,8 @@ extern void generateBinary();
 extern boolean sensorBinaryReading[numOfSensors];
 extern String buttonPressed();
 extern void memoryRetrieveMotorVariables();
+extern void PIDval();
+extern void deviation();
 extern double PIDvalue;
 extern double Vul;
 //-------------------------------------------------------------------
@@ -54,7 +56,7 @@ void motorTestAuto()
     
     digitalWrite(R_MTR_IN_1, LOW);
     digitalWrite(R_MTR_IN_2, LOW);
-    
+
     analogWrite(L_MTR_PWM, 100);
     digitalWrite(L_MTR_IN_1, HIGH);
     digitalWrite(L_MTR_IN_2, LOW);
@@ -260,4 +262,12 @@ void doura()
     digitalWrite(L_MTR_IN_1, HIGH);
     digitalWrite(R_MTR_IN_2, LOW);
     digitalWrite(L_MTR_IN_2, LOW);
+}
+
+void Run(){
+    readSensors();
+    generateBinary();
+    deviation();
+    PIDval();
+    doura();
 }
