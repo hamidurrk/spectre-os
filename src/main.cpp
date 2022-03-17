@@ -34,8 +34,9 @@ void setup()
 
 void loop()
 {
-  displayMenu("MAIN_MENU");
+  // displayMenu("MAIN_MENU");
   // readSensors();
   // generateBinary();
   // showBinarySensorData();
+  displayScrollText();
 }

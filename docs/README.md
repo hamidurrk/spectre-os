@@ -31,3 +31,7 @@ EEPROM memory diagram:
 - 36 select_btn PINC1
 - 38 left_btn PIND7
 - 40 up_btn PING1
+- 4 MotorLPin1
+- 3 MotorLPin2
+- 5 MotorRpin1
+- 6 MorotRpin2

@@ -63,7 +63,7 @@ void displaySetup()
     Wire.begin();
     display.begin(SSD1306_SWITCHCAPVCC, 0x3C);
     display.setTextColor(WHITE);
-    //display.setTextSize(1);
+    // display.setTextSize(1);
 }
 void optionHandler(String option)
 {
@@ -416,11 +416,11 @@ void displayOptionSelector(String menuType)
     }
 }
 
-void displayScrollText(void)
+void displayScrollText()
 {
     display.clearDisplay();
 
-    display.setTextSize(2); // Draw 2X-scale text
+    display.setTextSize(1); // Draw 2X-scale text
     display.setTextColor(SSD1306_WHITE);
     display.setCursor(10, 0);
     display.println(F("scroll"));

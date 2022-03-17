@@ -7,6 +7,7 @@ void displayBootScreen();
 void displayDrawMenu(String menuType); // Draw many lines
 void displayMenu(String menuType);
 void displayOptionSelector(String menuType);
+void displayScrollText(); // Draw scrolling text
 //
 //
 //
@@ -35,8 +36,6 @@ void testfilltriangle(); // Draw triangles (filled)
 void testdrawchar(); // Draw characters of the default font
 
 void testdrawstyles(); // Draw 'stylized' characters
-
-void scrollText(); // Draw scrolling text
 
 void testdrawbitmap();
 
