@@ -7,7 +7,7 @@ static unsigned int sensorMaxWaitTime = 1024;
 static boolean firstData[numOfSensors];
 int sensorRawReading[numOfSensors];
 boolean sensorBinaryReading[numOfSensors];
-unsigned int sensorBinaryData;
+byte sensorBinaryData;
 
 int sensorThreshold[numOfSensors] = {700, 700, 700, 700, 700, 700, 700, 700};
 static int sensorHighestReadings[numOfSensors];
@@ -17,8 +17,8 @@ byte numOfHighReadings;
 //---------------------- Connection Related---------------------------------------
 #define IR_LED 2
 static byte sensorPin[numOfSensors] = {7, 6, 5, 4, 3, 2, 1, 0}; // arduino analog pins
-//---------------------------------------------------------------------------------
-
+//------------------------- Invert Related Variable--------------------------------------------------
+bool isInvert = 0;
 // ------------------------------External Global Variables----------------------------
 extern void Forward(double del, int vel);
 extern void Stop(double del);
@@ -128,6 +128,16 @@ void generateBinary()
         }
         numOfHighReadings += sensorBinaryReading[i];
     }
+
+    // Handling Invert situations
+    if (isInvert)
+    {
+        for (i = 0; i < numOfSensors; i++)
+        {
+            sensorBinaryReading[i] ^= 1;
+        }
+        sensorBinaryData = ~sensorBinaryData;
+    }
     memoryAddReading(&sensorMemory, sensorBinaryData);
 }
 
@@ -173,6 +183,16 @@ bool portRead(char port_type, byte pin_number)
     else if (port_type == 'F')
     {
         reading = (PINF >> pin_number) & 1;
+        return reading;
+    }
+    else if (port_type == 'C')
+    {
+        reading = (PINC >> pin_number) & 1;
+        return reading;
+    }
+    else if (port_type == 'G')
+    {
+        reading = (PING >> pin_number) & 1;
         return reading;
     }
     return 0;

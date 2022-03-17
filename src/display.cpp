@@ -16,6 +16,8 @@ extern String buttonPressed();
 //--------- External important functions---------------------------------------------------------
 extern void memorySaveMotorVariables();
 extern void generateThreshold();
+extern void readSensors();
+extern void generateBinary();
 //--------- External important variables----------------------------------------------------------
 extern float motorVariables[4];
 extern float &motorSpeed;
@@ -90,6 +92,9 @@ void optionHandler(String option)
         delay(300);
         while (true)
         {
+            display.clearDisplay();
+            display.display();
+            readSensors();
             displayDrawMenu("SENSOR_RAW_MENU");
             if (buttonPressed() != "NO")
             {
@@ -105,6 +110,10 @@ void optionHandler(String option)
         delay(300);
         while (true)
         {
+            display.clearDisplay();
+            display.display();
+            readSensors();
+            generateBinary();
             displayDrawMenu("SENSOR_BINARY_MENU");
             if (buttonPressed() != "NO")
             {

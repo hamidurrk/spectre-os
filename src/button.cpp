@@ -1,11 +1,13 @@
 #include <Arduino.h>
 #include "button.h"
 // test
-#define BTN_UP 14
-#define BTN_DOWN 16
-#define BTN_LEFT 15
-#define BTN_RIGHT 18
-#define BTN_SELECT 17
+#define BTN_UP 40
+#define BTN_DOWN 32
+#define BTN_LEFT 38
+#define BTN_RIGHT 34
+#define BTN_SELECT 36
+
+extern bool portRead(char port_type, byte pin_number);
 
 void buttonSetup()
 {
@@ -19,40 +21,40 @@ void buttonSetup()
 void buttonTest()
 {
     Serial.print("UP ");
-    Serial.print(digitalRead(BTN_UP));
+    Serial.print(portRead('G', 1) );
     Serial.print("---");
     Serial.print("DOWN  ");
-    Serial.print(digitalRead(BTN_DOWN));
+    Serial.print(portRead('C', 5));
     Serial.print("---");
     Serial.print("LEFT ");
-    Serial.print(digitalRead(BTN_LEFT));
+    Serial.print(portRead('D', 7));
     Serial.print("---");
     Serial.print("RIGHT ");
-    Serial.print(digitalRead(BTN_RIGHT));
+    Serial.print(portRead('C', 3));
     Serial.print("---");
     Serial.print("SELECT ");
-    Serial.println(digitalRead(BTN_SELECT));
+    Serial.println(portRead('C', 1));
 }
 
 String buttonPressed()
 {
-    if (digitalRead(BTN_UP) == HIGH)
+    if (portRead('G', 1) == HIGH)
     {
         return "BTN_UP";
     }
-    else if (digitalRead(BTN_DOWN) == HIGH)
+    else if (portRead('C', 5) == HIGH)
     {
         return "BTN_DOWN";
     }
-    else if (digitalRead(BTN_SELECT) == HIGH)
+    else if (portRead('C', 1) == HIGH)
     {
         return "BTN_SELECT";
     }
-    else if (digitalRead(BTN_LEFT) == HIGH)
+    else if (portRead('D', 7) == HIGH)
     {
         return "BTN_LEFT";
     }
-    else if (digitalRead(BTN_RIGHT) == HIGH)
+    else if (portRead('C', 3) == HIGH)
     {
         return "BTN_RIGHT";
     }

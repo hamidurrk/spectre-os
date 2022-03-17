@@ -13,10 +13,11 @@ static int sm = 0;
 //------------------External Variables---------------------------------------
 const byte numOfSensors = 8;
 extern boolean sensorBinaryReading[numOfSensors];
-extern unsigned int sensorBinaryData;
+extern byte sensorBinaryData;
 extern float &P;
 extern float &I;
 extern float &D;
+extern bool isInvert; // For invert detection
 //----------------------------------THE MAIN CALCULATION&EXECUTION------------------------------------------------
 static int manualPIDcalcArray[numOfSensors] = {-5, -3, -2, -1, 1, 2, 3, 5};
 void deviation()
@@ -76,6 +77,11 @@ void deviation()
             sm += sensorBinaryReading[cnt];
         }
         Vul = Vul / sm;
+    }
+    //--------- Check for Invert situation ----------------------------------------------
+    if (sensorBinaryData == B11100111 || sensorBinaryData == B11001111 || sensorBinaryData == B11110011 || sensorBinaryData == B11000111 || sensorBinaryData == B11100011)
+    {
+        isInvert ^= 1;
     }
 }
 //-----------------------------------------------------------------------------------
