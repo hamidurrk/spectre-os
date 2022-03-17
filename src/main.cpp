@@ -38,5 +38,5 @@ void loop()
   // readSensors();
   // generateBinary();
   // showBinarySensorData();
-  displayScrollText();
+  // displayScrollText();
 }
