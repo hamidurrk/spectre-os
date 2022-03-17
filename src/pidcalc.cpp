@@ -6,9 +6,9 @@ double PIDvalue;
 double Vul = 0;
 static double Shomakolon;
 
-static double Parthokko;
-static double AgerVul;
-static int sm = 0;
+double Parthokko;
+double AgerVul;
+int sm = 0;
 // Case detection variables
 byte caseVariables[100];
 
