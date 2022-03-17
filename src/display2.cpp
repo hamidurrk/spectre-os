@@ -279,11 +279,11 @@ void displayOptionSelector(String menuType)
             if (buttonInstruction != "NO")
             {
 
-                if (buttonInstruction == "BTN_UP" && optionsIterator < 6)
+                if (buttonInstruction == "BTN_DOWN" && optionsIterator < 6)
                 {
                     optionsIterator++;
                 }
-                else if (buttonInstruction == "BTN_DOWN" && optionsIterator > 0)
+                else if (buttonInstruction == "BTN_UP" && optionsIterator > 0)
                 {
                     optionsIterator--;
                 }
