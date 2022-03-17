@@ -182,7 +182,7 @@ void displayDrawMenu(String menuType)
         display.setTextColor(SSD1306_WHITE);
         display.setCursor(left_padding, SCREEN_HEIGHT / 3);
         display.println(PIDoptions[optionsIterator]);
-        display.setCursor(left_padding, SCREEN_HEIGHT / 2);
+        display.setCursor(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 3);
         if (optionsIterator < 4)
             display.println(motorVariables[optionsIterator]);
     }
@@ -284,7 +284,7 @@ void displayOptionSelector(String menuType)
                 }
                 displayDrawMenu("MAIN_MENU");
                 display.display();
-                delay(300);
+                delay(200);
             }
         }
     }
@@ -316,18 +316,18 @@ void displayOptionSelector(String menuType)
                 {
                     if (strcmp(PIDoptions[optionsIterator], "BACK") == 0)
                     {
-                        delay(300);
+                        delay(200);
                         return;
                     }
                     else
                     {
                         optionHandler(PIDoptions[optionsIterator]);
-                        delay(300);
+                        delay(200);
                     }
                 }
                 displayDrawMenu("PID_MENU");
                 display.display();
-                delay(300);
+                delay(200);
             }
         }
     }
