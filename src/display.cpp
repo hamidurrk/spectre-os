@@ -419,8 +419,7 @@ void displayOptionSelector(String menuType)
 void displayScrollText()
 {
     display.clearDisplay();
-
-    display.setTextSize(1); // Draw 2X-scale text
+    display.setTextSize(1);
     display.setTextColor(SSD1306_WHITE);
     display.setCursor(10, 0);
     display.println(F("scroll"));
@@ -428,14 +427,14 @@ void displayScrollText()
     delay(100);
 
     // Scroll in various directions, pausing in-between:
-    display.startscrollright(0x00, 0x0F);
-    delay(2000);
-    display.stopscroll();
-    delay(1000);
-    display.startscrollleft(0x00, 0x0F);
-    delay(2000);
-    display.stopscroll();
-    delay(1000);
+    // display.startscrollright(0x00, 0x0F);
+    // delay(2000);
+    // display.stopscroll();
+    // delay(1000);
+    // display.startscrollleft(0x00, 0x0F);
+    // delay(2000);
+    // display.stopscroll();
+    // delay(1000);
     display.startscrolldiagright(0x00, 0x07);
     delay(2000);
     display.startscrolldiagleft(0x00, 0x07);
