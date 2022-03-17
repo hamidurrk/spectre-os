@@ -135,6 +135,23 @@ void optionHandler(String option)
         }
         delay(200);
     }
+    else if (option == "SONAR_MENU")
+    {
+        display.clearDisplay();
+        display.display();
+        delay(300);
+        while (true)
+        {
+            display.clearDisplay();
+            display.display();
+            displayDrawMenu("SONAR_MENU");
+            if (buttonPressed() != "NO")
+            {
+                break;
+            }
+        }
+        delay(200);
+    }
     else if (option == "S_R_BIN")
     {
         display.clearDisplay();
