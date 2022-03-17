@@ -177,41 +177,17 @@ void displayDrawMenu(String menuType)
     }
     else if (menuType == "PID_MENU")
     {
-        display.drawLine(0, 0, 0, display.height() - 5, SSD1306_WHITE);
-        display.drawLine(10, 0, 10, display.height() - 5, SSD1306_WHITE);
-        display.drawLine(display.width() / 2, 0, display.width() / 2, display.height() - 25, SSD1306_WHITE);
-        display.drawLine(display.width() - 1, 0, display.width() - 1, display.height() - 5, SSD1306_WHITE);
-        display.drawLine(display.width() - 11, 0, display.width() - 11, display.height() - 5, SSD1306_WHITE);
-        display.setTextSize(1);
+        display.setTextSize(1); // Set the text size
         display.setTextColor(SSD1306_WHITE);
-        for (int optionsIterator = 0; optionsIterator < 6; optionsIterator++, y += 10)
-        {
-            display.setCursor(x, y);                      // Set the cursor position . The top left position is 0,0
-            display.println(PIDoptions[optionsIterator]); // Print from the cursor position
-            if (optionsIterator < 4)
-            {
-                display.setCursor(display.width() / 2 + 4, y);
-                display.println(motorVariables[optionsIterator]);
-            }
-        }
+        display.setCursor(10, SCREEN_HEIGHT / 1.5);
+        display.println(PIDoptions[optionsIterator]);
     }
     else if (menuType == "SENSOR_MENU")
     {
-        // Drawing the gridlines
-        display.drawLine(0, 0, 0, display.height() - 5, SSD1306_WHITE);
-        display.drawLine(10, 0, 10, display.height() - 5, SSD1306_WHITE);
-        display.drawLine(display.width() - 1, 0, display.width() - 1, display.height() - 5, SSD1306_WHITE);
-
-        // drawing the options
-        display.setTextSize(1);              // Set the text size
-        display.setTextColor(SSD1306_WHITE); // Set the text color
-
-        // Push all the options to the display buffer
-        for (int optionsIterator = 0; optionsIterator < 6; optionsIterator++, y += 10)
-        {
-            display.setCursor(x, y);                             // Set the cursor position . The top left position is 0,0
-            display.println(sensorMenuOptions[optionsIterator]); // Print from the cursor position
-        }
+        display.setTextSize(1); // Set the text size
+        display.setTextColor(SSD1306_WHITE);
+        display.setCursor(10, SCREEN_HEIGHT / 1.5);
+        display.println(sensorMenuOptions[optionsIterator]);
     }
     else if (menuType == "SENSOR_THRESHOLD_MENU")
     {
@@ -269,7 +245,7 @@ void displayDrawMenu(String menuType)
 
 void displayOptionSelector(String menuType)
 {
-    optY = 2;
+    optionsIterator = 0;
     String buttonInstruction;
     if (menuType == "MAIN_MENU")
     {
@@ -279,7 +255,7 @@ void displayOptionSelector(String menuType)
             if (buttonInstruction != "NO")
             {
 
-                if (buttonInstruction == "BTN_DOWN" && optionsIterator < 6)
+                if (buttonInstruction == "BTN_DOWN" && optionsIterator < 5)
                 {
                     optionsIterator++;
                 }
@@ -287,7 +263,7 @@ void displayOptionSelector(String menuType)
                 {
                     optionsIterator--;
                 }
-                else if (buttonInstruction == "BTN_SELECT" && optY >= 2 && optY <= display.height() - 10)
+                else if (buttonInstruction == "BTN_SELECT")
                 {
                     // if (mainMenuOptions[optY / 10] == "RUN")
                     // {
@@ -310,43 +286,38 @@ void displayOptionSelector(String menuType)
     }
     else if (menuType == "PID_MENU")
     {
-        display.drawRect(optX, optY, optH, optH, SSD1306_WHITE);
-        display.fillRect(optX, optY, optH, optH, SSD1306_WHITE);
-        display.drawRect((SCREEN_WIDTH - 11 + optX), optY, optH, optH, SSD1306_WHITE);
-        display.fillRect((SCREEN_WIDTH - 11 + optX), optY, optH, optH, SSD1306_WHITE);
-        display.display();
         while (true)
         {
             buttonInstruction = buttonPressed();
             if (buttonInstruction != "NO")
             {
 
-                if (buttonInstruction == "BTN_UP" && (optY + 10) && (optY - 10) >= 2)
+                if (buttonInstruction == "BTN_UP" && optionsIterator > 0)
                 {
-                    optY -= 10;
+                    optionsIterator--;
                 }
-                else if (buttonInstruction == "BTN_DOWN" && (optY + 10) < display.height() - 10)
+                else if (buttonInstruction == "BTN_DOWN" && optionsIterator < 5)
                 {
-                    optY += 10;
+                    optionsIterator++;
                 }
-                else if (buttonInstruction == "BTN_LEFT" && optY / 10 < 4)
+                else if (buttonInstruction == "BTN_LEFT" && optionsIterator < 4)
                 {
-                    motorVariables[optY / 10] -= 0.2;
+                    motorVariables[optionsIterator] -= 0.2;
                 }
-                else if (buttonInstruction == "BTN_RIGHT" && optY / 10 < 4)
+                else if (buttonInstruction == "BTN_RIGHT" && optionsIterator < 4)
                 {
-                    motorVariables[optY / 10] += 0.2;
+                    motorVariables[optionsIterator] += 0.2;
                 }
-                else if (buttonInstruction == "BTN_SELECT" && optY >= 2 && optY <= display.height() - 10)
+                else if (buttonInstruction == "BTN_SELECT" && optionsIterator > 3)
                 {
-                    if (strcmp(PIDoptions[optY / 10], "BACK") == 0)
+                    if (strcmp(PIDoptions[optionsIterator], "BACK") == 0)
                     {
                         delay(300);
                         return;
                     }
                     else
                     {
-                        optionHandler(PIDoptions[optY / 10]);
+                        optionHandler(PIDoptions[optionsIterator]);
                         delay(300);
                     }
                 }
