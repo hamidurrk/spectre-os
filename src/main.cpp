@@ -28,9 +28,17 @@ void setup()
   motorSetup();
 
   displayBootScreen();
+  //------------------------------------------------------------
+  generateThreshold();
+
+
+
 }
 
 void loop()
 {
-  displayMenu("MAIN_MENU");
+  displayMenu("MAIN_MENU")
+  // readSensors();
+  // generateBinary();
+  // showBinarySensorData();
 }

@@ -15,7 +15,7 @@ static int sensorLowestReadings[numOfSensors];
 
 byte numOfHighReadings;
 //---------------------- Connection Related---------------------------------------
-#define IR_LED 2
+#define IR_LED 31
 static byte sensorPin[numOfSensors] = {7, 6, 5, 4, 3, 2, 1, 0}; // arduino analog pins
 //------------------------- Invert Related Variable--------------------------------------------------
 bool isInvert = 0;
@@ -150,11 +150,11 @@ void generateThreshold()
     for (int fill_i = 0; fill_i < numOfSensors; fill_i++)
     {
         sensorHighestReadings[fill_i] = 0;
-        sensorLowestReadings[fill_i] = 0;
+        sensorLowestReadings[fill_i] = sensorMaxWaitTime;
     }
     for (int th_i = 0; th_i < 300; th_i++)
     {
-        Forward(1, 100);
+        Forward(1, 60);
         readSensors();
         for (int sense = 0; sense < numOfSensors; sense++)
         {

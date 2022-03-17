@@ -8,6 +8,7 @@ void readSensors();
 void generateBinary();
 void generateThreshold();
 void showRawSensorData();
+void showBinarySensorData();
 void sensorRetrieveThreshold();
 bool portRead(char port_type, byte pin_number);
 

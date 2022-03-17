@@ -2,11 +2,11 @@
 #include "motor.h"
 
 //-------------- Connection related---------------------------------------
-#define R_MTR_PWM 12
-#define R_MTR_IN_1 7
+#define R_MTR_PWM 2
+#define R_MTR_IN_1 5
 #define R_MTR_IN_2 6
 
-#define L_MTR_PWM 2
+#define L_MTR_PWM 7
 #define L_MTR_IN_1 4
 #define L_MTR_IN_2 3
 
@@ -51,26 +51,34 @@ void motorTestAuto()
     digitalWrite(R_MTR_IN_1, HIGH);
     digitalWrite(R_MTR_IN_2, LOW);
     delay(1000);
-    analogWrite(R_MTR_PWM, 0);
-
+    
+    digitalWrite(R_MTR_IN_1, LOW);
+    digitalWrite(R_MTR_IN_2, LOW);
+    
     analogWrite(L_MTR_PWM, 100);
     digitalWrite(L_MTR_IN_1, HIGH);
     digitalWrite(L_MTR_IN_2, LOW);
     delay(1000);
-    analogWrite(L_MTR_PWM, 0);
+    digitalWrite(L_MTR_IN_1, LOW);
+    digitalWrite(L_MTR_IN_2, LOW);
 
     // Motor backward test
     analogWrite(R_MTR_PWM, 100);
     digitalWrite(R_MTR_IN_1, LOW);
     digitalWrite(R_MTR_IN_2, HIGH);
     delay(1000);
-    analogWrite(R_MTR_PWM, 0);
+    digitalWrite(R_MTR_IN_1, LOW);
+    digitalWrite(R_MTR_IN_2, LOW);
 
     analogWrite(L_MTR_PWM, 100);
     digitalWrite(L_MTR_IN_1, LOW);
     digitalWrite(L_MTR_IN_2, HIGH);
     delay(1000);
-    analogWrite(L_MTR_PWM, 0);
+    digitalWrite(L_MTR_IN_1, LOW);
+    digitalWrite(L_MTR_IN_2, LOW);
+
+    delay(100);
+    
 }
 //---------------------------------------------------------------------------------------
 void motorCalibrate()
