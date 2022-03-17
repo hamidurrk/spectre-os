@@ -3,7 +3,7 @@
 
 double PIDvalue;
 
-static double Vul = 0;
+double Vul = 0;
 static double Shomakolon;
 
 static double Parthokko;
