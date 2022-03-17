@@ -62,6 +62,87 @@ void displaySetup()
 {
     Wire.begin();
     display.begin(SSD1306_SWITCHCAPVCC, 0x3C);
-    display.setTextColor(WHITE);
-    // display.setTextSize(1);
+}
+
+void displayBootScreen()
+{
+
+    display.clearDisplay();
+    display.setTextSize(2);
+    display.setTextColor(SSD1306_WHITE);
+    display.setCursor(20, (SCREEN_HEIGHT / 2));
+    display.println(F("THUNDER"));
+    display.display();
+    delay(1000);
+    display.clearDisplay();
+    display.display();
+    delay(500);
+}
+
+void optionHandler(String option)
+{
+    if (option == "SAVE")
+    {
+        display.clearDisplay();
+        display.display();
+        memorySaveMotorVariables();
+    }
+    else if (option == "G_THRESHOLD")
+    {
+        display.clearDisplay();
+        display.display();
+        generateThreshold();
+    }
+    else if (option == "V_THRESHOLD")
+    {
+        display.clearDisplay();
+        display.display();
+        delay(300);
+        while (true)
+        {
+            displayDrawMenu("SENSOR_THRESHOLD_MENU");
+            if (buttonPressed() != "NO")
+            {
+                break;
+            }
+        }
+        delay(200);
+    }
+    else if (option == "S_R_RAW")
+    {
+        display.clearDisplay();
+        display.display();
+        delay(300);
+        while (true)
+        {
+            display.clearDisplay();
+            display.display();
+            readSensors();
+            displayDrawMenu("SENSOR_RAW_MENU");
+            if (buttonPressed() != "NO")
+            {
+                break;
+            }
+        }
+        delay(200);
+    }
+    else if (option == "S_R_BIN")
+    {
+        display.clearDisplay();
+        display.display();
+        delay(300);
+        while (true)
+        {
+            display.clearDisplay();
+            display.display();
+            readSensors();
+            generateBinary();
+            displayDrawMenu("SENSOR_BINARY_MENU");
+            if (buttonPressed() != "NO")
+            {
+                break;
+            }
+        }
+        delay(200);
+    }
 }
