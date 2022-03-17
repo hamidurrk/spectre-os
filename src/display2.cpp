@@ -286,43 +286,38 @@ void displayOptionSelector(String menuType)
     }
     else if (menuType == "PID_MENU")
     {
-        display.drawRect(optX, optY, optH, optH, SSD1306_WHITE);
-        display.fillRect(optX, optY, optH, optH, SSD1306_WHITE);
-        display.drawRect((SCREEN_WIDTH - 11 + optX), optY, optH, optH, SSD1306_WHITE);
-        display.fillRect((SCREEN_WIDTH - 11 + optX), optY, optH, optH, SSD1306_WHITE);
-        display.display();
         while (true)
         {
             buttonInstruction = buttonPressed();
             if (buttonInstruction != "NO")
             {
 
-                if (buttonInstruction == "BTN_UP" && (optY + 10) && (optY - 10) >= 2)
+                if (buttonInstruction == "BTN_UP" && optionsIterator > 0)
                 {
-                    optY -= 10;
+                    optionsIterator--;
                 }
-                else if (buttonInstruction == "BTN_DOWN" && (optY + 10) < display.height() - 10)
+                else if (buttonInstruction == "BTN_DOWN" && optionsIterator < 5)
                 {
-                    optY += 10;
+                    optionsIterator++;
                 }
-                else if (buttonInstruction == "BTN_LEFT" && optY / 10 < 4)
+                else if (buttonInstruction == "BTN_LEFT" && optionsIterator < 4)
                 {
-                    motorVariables[optY / 10] -= 0.2;
+                    motorVariables[optionsIterator] -= 0.2;
                 }
-                else if (buttonInstruction == "BTN_RIGHT" && optY / 10 < 4)
+                else if (buttonInstruction == "BTN_RIGHT" && optionsIterator < 4)
                 {
-                    motorVariables[optY / 10] += 0.2;
+                    motorVariables[optionsIterator] += 0.2;
                 }
-                else if (buttonInstruction == "BTN_SELECT" && optY >= 2 && optY <= display.height() - 10)
+                else if (buttonInstruction == "BTN_SELECT" && optionsIterator > 3)
                 {
-                    if (strcmp(PIDoptions[optY / 10], "BACK") == 0)
+                    if (strcmp(PIDoptions[optionsIterator], "BACK") == 0)
                     {
                         delay(300);
                         return;
                     }
                     else
                     {
-                        optionHandler(PIDoptions[optY / 10]);
+                        optionHandler(PIDoptions[optionsIterator]);
                         delay(300);
                     }
                 }
