@@ -1,11 +1,11 @@
 #include <Arduino.h>
 
-#define trigPin 35
-#define echoPin 33
+#define trigPin 33
+#define echoPin 35
 
 void sonarSetup()
 {
-    pinMode(trigPin, OUTPUT); // Sets the trigPin as an Output
+    pinMode(trigPin, OUTPUT);
     pinMode(echoPin, INPUT);
 }
 

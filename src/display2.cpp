@@ -309,6 +309,10 @@ void displayOptionSelector(String menuType)
                             break;
                     }
                 }
+                else if (buttonInstruction == "BTN_SELECT" && optionsIterator == 3)
+                {
+                    optionHandler(mainMenuOptions[optionsIterator]);
+                }
                 displayDrawMenu("MAIN_MENU");
                 display.display();
                 delay(200);
