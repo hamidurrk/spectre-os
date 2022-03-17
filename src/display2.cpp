@@ -172,7 +172,7 @@ void displayDrawMenu(String menuType)
         // Drawing the gridlines
         display.setTextSize(1); // Set the text size
         display.setTextColor(SSD1306_WHITE);
-        display.setCursor(10, SCREEN_HEIGHT / 2);
+        display.setCursor(10, SCREEN_HEIGHT / 1.5);
         display.println(mainMenuOptions[optionsIterator]);
     }
     else if (menuType == "PID_MENU")
@@ -283,7 +283,7 @@ void displayOptionSelector(String menuType)
                 {
                     optionsIterator++;
                 }
-                else if (buttonInstruction == "BTN_DOWN" && (optY + 10) < display.height() - 10)
+                else if (buttonInstruction == "BTN_DOWN" && optionsIterator > 0)
                 {
                     optionsIterator--;
                 }
