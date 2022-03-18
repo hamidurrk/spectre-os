@@ -21,6 +21,7 @@ extern void readSensors();
 extern void generateBinary();
 extern void Run();
 extern double sonarSearch();
+extern void Stop(double del);
 //--------- External important variables----------------------------------------------------------
 extern float motorVariables[4];
 extern float &motorSpeed;
@@ -151,6 +152,20 @@ void optionHandler(String option)
             }
         }
         delay(200);
+    }
+    else if (option == "RUN")
+    {
+        display.clearDisplay();
+        display.display();
+        while (true)
+        {
+            Run();
+            if (buttonPressed() != "NO")
+            {
+                Stop(100);
+                break;
+            }
+        }
     }
     else if (option == "S_R_BIN")
     {
@@ -300,14 +315,7 @@ void displayOptionSelector(String menuType)
                 else if (buttonInstruction == "BTN_SELECT" && optionsIterator == 5)
                 {
 
-                    display.clearDisplay();
-                    display.display();
-                    while (true)
-                    {
-                        Run();
-                        if (buttonPressed() != "NO")
-                            break;
-                    }
+                    optionHandler("RUN");
                 }
                 else if (buttonInstruction == "BTN_SELECT" && optionsIterator == 3)
                 {
@@ -315,7 +323,7 @@ void displayOptionSelector(String menuType)
                 }
                 displayDrawMenu("MAIN_MENU");
                 display.display();
-                delay(200);
+                delay(100);
             }
         }
     }
@@ -337,11 +345,17 @@ void displayOptionSelector(String menuType)
                 }
                 else if (buttonInstruction == "BTN_LEFT" && optionsIterator < 4)
                 {
-                    motorVariables[optionsIterator] -= 0.2;
+                    if (strcmp(PIDoptions[optionsIterator], "M_SP") == 0)
+                        motorVariables[optionsIterator] -= 5;
+                    else
+                        motorVariables[optionsIterator] -= 0.2;
                 }
                 else if (buttonInstruction == "BTN_RIGHT" && optionsIterator < 4)
                 {
-                    motorVariables[optionsIterator] += 0.2;
+                    if (strcmp(PIDoptions[optionsIterator], "M_SP") == 0)
+                        motorVariables[optionsIterator] += 5;
+                    else
+                        motorVariables[optionsIterator] += 0.2;
                 }
                 else if (buttonInstruction == "BTN_SELECT" && optionsIterator > 3)
                 {
@@ -364,33 +378,30 @@ void displayOptionSelector(String menuType)
     }
     else if (menuType == "SENSOR_MENU")
     {
-        display.drawRect(optX, optY, optH, optH, SSD1306_WHITE);
-        display.fillRect(optX, optY, optH, optH, SSD1306_WHITE);
-        display.display();
         while (true)
         {
             buttonInstruction = buttonPressed();
             if (buttonInstruction != "NO")
             {
 
-                if (buttonInstruction == "BTN_UP" && (optY + 10) && (optY - 10) >= 2)
+                if (buttonInstruction == "BTN_UP" && optionsIterator > 0)
                 {
-                    optY -= 10;
+                    optionsIterator--;
                 }
-                else if (buttonInstruction == "BTN_DOWN" && (optY + 10) < display.height() - 10)
+                else if (buttonInstruction == "BTN_DOWN" && optionsIterator < 5)
                 {
-                    optY += 10;
+                    optionsIterator++;
                 }
-                else if (buttonInstruction == "BTN_SELECT" && optY >= 2 && optY <= display.height() - 10)
+                else if (buttonInstruction == "BTN_SELECT" && optionsIterator > 0 && optionsIterator < 6)
                 {
-                    if (strcmp(sensorMenuOptions[optY / 10], "BACK") == 0)
+                    if (strcmp(sensorMenuOptions[optionsIterator], "BACK") == 0)
                     {
                         delay(300);
                         return;
                     }
                     else
                     {
-                        optionHandler(sensorMenuOptions[optY / 10]);
+                        optionHandler(sensorMenuOptions[optionsIterator]);
                         delay(300);
                     }
                 }

@@ -28,11 +28,16 @@ void setup()
 
   displayBootScreen();
   //------------------------------------------------------------
-  // generateThreshold();
+  while (true)
+  {
+    if (buttonPressed() != "NO")
+      break;
+  }
+  generateThreshold();
 }
 
 void loop()
 {
-  // displayMenu("MAIN_MENU");
-  Serial.println(sonarSearch());
+  displayMenu("MAIN_MENU");
+  // motorTestAuto();
 }

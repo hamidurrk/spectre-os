@@ -2,25 +2,25 @@
 #include "motor.h"
 
 //-------------- Connection related---------------------------------------
-#define R_MTR_PWM 2
+#define R_MTR_PWM 7
 #define R_MTR_IN_1 5
 #define R_MTR_IN_2 6
 
-#define L_MTR_PWM 7
+#define L_MTR_PWM 2
 #define L_MTR_IN_1 4
 #define L_MTR_IN_2 3
 
 #define MTR_STBY 5
 //-------------------------------------------------------------------------
 
-float motorVariables[4] = {180.0, 4.2, 0, 11.6};
+float motorVariables[4] = {80.0, 4.2, 0, 11.6};
 float &motorSpeed = motorVariables[0];
 float &P = motorVariables[1];
 float &I = motorVariables[2];
 float &D = motorVariables[3];
 const byte numOfSensors = 8;
-int R_motorSpeed = 150;
-int L_motorSpeed = 150;
+int R_motorSpeed = motorSpeed;
+int L_motorSpeed = motorSpeed;
 //------------ External variables+functions used here-----------------
 extern void readSensors();
 extern void generateBinary();
@@ -54,32 +54,32 @@ void motorTestAuto()
     digitalWrite(R_MTR_IN_2, LOW);
     delay(1000);
 
-    digitalWrite(R_MTR_IN_1, LOW);
-    digitalWrite(R_MTR_IN_2, LOW);
+    // digitalWrite(R_MTR_IN_1, LOW);
+    // digitalWrite(R_MTR_IN_2, LOW);
 
-    analogWrite(L_MTR_PWM, 100);
-    digitalWrite(L_MTR_IN_1, HIGH);
-    digitalWrite(L_MTR_IN_2, LOW);
-    delay(1000);
-    digitalWrite(L_MTR_IN_1, LOW);
-    digitalWrite(L_MTR_IN_2, LOW);
+    // analogWrite(L_MTR_PWM, 100);
+    // digitalWrite(L_MTR_IN_1, HIGH);
+    // digitalWrite(L_MTR_IN_2, LOW);
+    // delay(1000);
+    // digitalWrite(L_MTR_IN_1, LOW);
+    // digitalWrite(L_MTR_IN_2, LOW);
 
-    // Motor backward test
-    analogWrite(R_MTR_PWM, 100);
-    digitalWrite(R_MTR_IN_1, LOW);
-    digitalWrite(R_MTR_IN_2, HIGH);
-    delay(1000);
-    digitalWrite(R_MTR_IN_1, LOW);
-    digitalWrite(R_MTR_IN_2, LOW);
+    // // Motor backward test
+    // analogWrite(R_MTR_PWM, 100);
+    // digitalWrite(R_MTR_IN_1, LOW);
+    // digitalWrite(R_MTR_IN_2, HIGH);
+    // delay(1000);
+    // digitalWrite(R_MTR_IN_1, LOW);
+    // digitalWrite(R_MTR_IN_2, LOW);
 
-    analogWrite(L_MTR_PWM, 100);
-    digitalWrite(L_MTR_IN_1, LOW);
-    digitalWrite(L_MTR_IN_2, HIGH);
-    delay(1000);
-    digitalWrite(L_MTR_IN_1, LOW);
-    digitalWrite(L_MTR_IN_2, LOW);
+    // analogWrite(L_MTR_PWM, 100);
+    // digitalWrite(L_MTR_IN_1, LOW);
+    // digitalWrite(L_MTR_IN_2, HIGH);
+    // delay(1000);
+    // digitalWrite(L_MTR_IN_1, LOW);
+    // digitalWrite(L_MTR_IN_2, LOW);
 
-    delay(100);
+    // delay(100);
 }
 //---------------------------------------------------------------------------------------
 void motorCalibrate()
