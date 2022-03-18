@@ -138,7 +138,7 @@ void generateBinary()
         }
         sensorBinaryData = ~sensorBinaryData;
     }
-    memoryAddReading(&sensorMemory, sensorBinaryData);
+    // memoryAddReading(&sensorMemory, sensorBinaryData);
 }
 
 void generateThreshold()

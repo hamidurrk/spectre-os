@@ -11,6 +11,10 @@
 #define L_MTR_IN_2 3
 
 #define MTR_STBY 5
+
+#define LED_1 48
+#define LED_2 50
+
 //-------------------------------------------------------------------------
 
 float motorVariables[4] = {80.0, 4.2, 0, 11.6};
@@ -31,6 +35,7 @@ extern void PIDval();
 extern void deviation();
 extern double PIDvalue;
 extern double Vul;
+extern byte numOfHighReadings;
 //-------------------------------------------------------------------
 
 void motorSetup()
@@ -270,4 +275,22 @@ void Run()
     deviation();
     PIDval();
     doura();
+    if (numOfHighReadings == 0 || numOfHighReadings >= 4)
+    {
+        detection();
+    }
+}
+
+void detection()
+{
+    digitalWrite(LED_1, HIGH);
+    digitalWrite(LED_2, HIGH);
+    for (int detect = 0; detect < 20; detect++)
+    {
+        readSensors();
+        generateBinary();
+        deviation();
+        PIDval();
+        doura();
+    }
 }

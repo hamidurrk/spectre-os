@@ -10,7 +10,18 @@ double Parthokko;
 double AgerVul;
 int sm = 0;
 // Case detection variables
-byte caseVariables[100];
+byte caseVariables[100] = {
+    // Two sensor acute left
+    B11011000,
+    B11001100,
+    B11110000, // 90 degree
+    B11111000, // 90 degree
+    // Two sensor acute right
+    B00011011,
+    B00110011,
+    B00001111, // 90 degree
+    B00011111  // 90 degree
+};
 
 //------------------External Variables---------------------------------------
 const byte numOfSensors = 8;
