@@ -275,10 +275,10 @@ void Run()
     deviation();
     PIDval();
     doura();
-    if (numOfHighReadings == 0 || numOfHighReadings >= 4)
-    {
-        detection();
-    }
+    // if (numOfHighReadings == 0 || numOfHighReadings >= 4)
+    // {
+    //     detection();
+    // }
 }
 
 void detection()

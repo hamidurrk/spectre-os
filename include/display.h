@@ -8,6 +8,8 @@ void displayDrawMenu(String menuType); // Draw many lines
 void displayMenu(String menuType);
 void displayOptionSelector(String menuType);
 void displayScrollText(); // Draw scrolling text
+void displayDrawGrid(String menuType);
+void displaySetOptionBuffer(String menuType);
 //
 //
 //

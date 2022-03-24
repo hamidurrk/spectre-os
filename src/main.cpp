@@ -27,13 +27,6 @@ void setup()
   sonarSetup();
 
   displayBootScreen();
-  //------------------------------------------------------------
-  while (true)
-  {
-    if (buttonPressed() != "NO")
-      break;
-  }
-  generateThreshold();
 }
 
 void loop()

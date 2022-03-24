@@ -15,5 +15,6 @@ void Tright();
 void BreakR();
 void BreakL();
 void BreakF();
+void detection();
 
 #endif // _MOTOR_CONTROL

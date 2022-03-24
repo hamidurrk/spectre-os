@@ -1,6 +1,6 @@
 #ifndef _SONAR
 
-double sonarSearch();
+int sonarSearch();
 void sonarSetup();
 
 #define _SONAR
