@@ -96,7 +96,7 @@ void showRawSensorData()
     Serial.println();
 }
 
-void showBinarySensorData()
+void showBinarySensorData(bool newline)
 {
     readSensors();
     generateBinary();
@@ -105,7 +105,8 @@ void showBinarySensorData()
         Serial.print(sensorBinaryReading[i]);
         Serial.print(" ");
     }
-    Serial.println();
+    if (newline)
+        Serial.println();
 }
 void generateBinary()
 {
@@ -130,15 +131,15 @@ void generateBinary()
     }
 
     // Handling Invert situations
-    if (isInvert)
-    {
-        for (i = 0; i < numOfSensors; i++)
-        {
-            sensorBinaryReading[i] ^= 1;
-        }
-        sensorBinaryData = ~sensorBinaryData;
-    }
-    // memoryAddReading(&sensorMemory, sensorBinaryData);
+    // if (isInvert)
+    // {
+    //     for (i = 0; i < numOfSensors; i++)
+    //     {
+    //         sensorBinaryReading[i] ^= 1;
+    //     }
+    //     sensorBinaryData = ~sensorBinaryData;
+    // }
+    memoryAddReading(&sensorMemory, sensorBinaryData);
 }
 
 void generateThreshold()

@@ -2,13 +2,13 @@
 #include <EEPROM.h>
 #include "memory.h"
 
-const int memoryLength = 500;
-int memoryArray[memoryLength];
+const int memoryLength = 200;
+uint8_t memoryArray[memoryLength];
 struct Memory
 {
     int position;
     int size;
-    int *arr;
+    uint8_t *arr;
 };
 Memory sensorMemory;
 
@@ -31,7 +31,22 @@ void memoryShowData(struct Memory *m)
 {
     for (int i = m->position + 1; i <= m->size + m->position; i++)
     {
-        Serial.println(m->arr[i % m->size]);
+        for (int xx = 0; xx < 8; xx++)
+        {
+            Serial.print(((m->arr[i % m->size]) & (0b10000000 >> xx)) >> (7 - xx));
+        }
+        Serial.println();
+    }
+}
+
+void accessMemoryArray(struct Memory *m, uint8_t *accessArray)
+{
+
+    int j = 0;
+    for (int i = m->position + 1; i <= m->size + m->position; i++, j++)
+    {
+        accessArray[j] = m->arr[i % m->size];
+        // Serial.println(m->arr[i % m->size]);
     }
 }
 

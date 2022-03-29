@@ -1,8 +1,8 @@
 #include <Arduino.h>
-#include <Arduino.h>
 #include "display.h"
 #include "button.h"
 #include "motor.h"
+#include "pidcalc.h"
 #include "irsensor.h"
 #include "memory.h"
 #include "sonar.h"
@@ -11,7 +11,7 @@
 extern struct Memory sensorMemory;
 const int numOfSensors = 8;
 extern unsigned int sensorThreshold[numOfSensors];
-void setup()
+extern void setup()
 {
   Serial.begin(9600);
   displaySetup();
@@ -32,5 +32,4 @@ void setup()
 void loop()
 {
   displayMenu("MAIN_MENU");
-  // motorTestAuto();
 }

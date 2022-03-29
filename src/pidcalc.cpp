@@ -102,10 +102,10 @@ void deviation()
         Vul = Vul / sm;
     }
     //--------- Check for Invert situation ----------------------------------------------
-    if (sensorBinaryData == B11100111 || sensorBinaryData == B11001111 || sensorBinaryData == B11110011 || sensorBinaryData == B11000111 || sensorBinaryData == B11100011 || sensorBinaryData == B11101111 || sensorBinaryData == B11110111 || sensorBinaryData == B11011111 || sensorBinaryData == B11111011)
-    {
-        isInvert ^= 1;
-    }
+    // if (sensorBinaryData == B11100111 || sensorBinaryData == B11001111 || sensorBinaryData == B11110011 || sensorBinaryData == B11000111 || sensorBinaryData == B11100011 || sensorBinaryData == B11101111 || sensorBinaryData == B11110111 || sensorBinaryData == B11011111 || sensorBinaryData == B11111011)
+    // {
+    //     isInvert ^= 1;
+    // }
 }
 //-----------------------------------------------------------------------------------
 void PIDval()
@@ -116,3 +116,15 @@ void PIDval()
     AgerVul = Vul;
 }
 //------------------------------------------------------------------------------------
+void showPIDvalue(bool newline)
+{
+    deviation();
+    PIDval();
+    Serial.print("Vul ");
+    Serial.print(Vul);
+    Serial.print("\t");
+    Serial.print("PIDvalue ");
+    Serial.print(PIDvalue);
+    if (newline)
+        Serial.println("");
+}

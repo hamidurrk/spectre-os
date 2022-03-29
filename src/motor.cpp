@@ -33,9 +33,12 @@ extern String buttonPressed();
 extern void memoryRetrieveMotorVariables();
 extern void PIDval();
 extern void deviation();
+extern void memoryShowData(struct Memory *m);
+extern void accessMemoryArray(struct Memory *m, uint8_t *accessArray);
 extern double PIDvalue;
 extern double Vul;
 extern byte numOfHighReadings;
+extern struct Memory sensorMemory;
 //-------------------------------------------------------------------
 
 void motorSetup()
@@ -108,8 +111,9 @@ void Forward(double del, int vel)
     analogWrite(R_MTR_PWM, vel);
     analogWrite(L_MTR_PWM, vel);
     digitalWrite(R_MTR_IN_1, HIGH);
-    digitalWrite(R_MTR_IN_2, LOW);
     digitalWrite(L_MTR_IN_1, HIGH);
+
+    digitalWrite(R_MTR_IN_2, LOW);
     digitalWrite(L_MTR_IN_2, LOW);
     delay(del);
 }
@@ -119,8 +123,9 @@ void Backward(double del, int vel)
     analogWrite(R_MTR_PWM, vel);
     analogWrite(L_MTR_PWM, vel);
     digitalWrite(R_MTR_IN_2, HIGH);
-    digitalWrite(R_MTR_IN_1, LOW);
     digitalWrite(L_MTR_IN_2, HIGH);
+
+    digitalWrite(R_MTR_IN_1, LOW);
     digitalWrite(L_MTR_IN_1, LOW);
     delay(del);
 }
@@ -160,28 +165,22 @@ void Stop(double del)
 // //---------------------------------Breaking functions--------------------------------------
 void BreakF()
 {
-    for (int i = 100; i >= 0; i -= 5)
-    {
-        Forward(1, i);
-    }
+    Stop(10);
+    Backward(50, 200);
     Stop(20);
 }
 // //-----------------------------------------------------------------------------------------
 void BreakL()
 {
-    for (int i = 100; i >= 0; i -= 5)
-    {
-        Left(1, i);
-    }
+    Stop(10);
+    Right(50, 200);
     Stop(20);
 }
 // //-----------------------------------------------------------------------------------------
 void BreakR()
 {
-    for (int i = 100; i >= 0; i -= 5)
-    {
-        Right(1, i);
-    }
+    Stop(10);
+    Left(50, 200);
     Stop(20);
 }
 //------------------------------Sharp Turn Functions------------------------------------------
@@ -190,7 +189,7 @@ void Tleft()
     BreakF();
     while (1)
     {
-        Left(10, 240);
+        Left(10, 100);
         readSensors();
         generateBinary();
         if (sensorBinaryReading[0] == 1 || sensorBinaryReading[1] == 1)
@@ -216,7 +215,7 @@ void Tright()
     BreakF();
     while (1)
     {
-        Right(10, 240);
+        Right(10, 100);
         readSensors();
         generateBinary();
         if (sensorBinaryReading[6] == 1 || sensorBinaryReading[7] == 1)
@@ -275,22 +274,46 @@ void Run()
     deviation();
     PIDval();
     doura();
-    // if (numOfHighReadings == 0 || numOfHighReadings >= 4)
-    // {
-    //     detection();
-    // }
+    if (numOfHighReadings == 0 || numOfHighReadings > 6)
+    {
+        detection();
+    }
 }
 
 void detection()
 {
+    const int memoryLength = 200;
     digitalWrite(LED_1, HIGH);
     digitalWrite(LED_2, HIGH);
-    for (int detect = 0; detect < 20; detect++)
+    int l = 0;
+    int r = 0;
+    uint8_t lReference = 0b10000000;
+    uint8_t rReference = 0b00000001;
+    uint8_t accessArray[memoryLength];
+    accessMemoryArray(&sensorMemory, accessArray);
+    for (int i = 0; i < memoryLength; i++)
     {
-        readSensors();
-        generateBinary();
-        deviation();
-        PIDval();
-        doura();
+        l += (accessArray[i] & lReference) >> 7;
+        r += (accessArray[i] & rReference);
+    }
+    // memoryShowData(&sensorMemory);
+    digitalWrite(LED_1, LOW);
+    digitalWrite(LED_2, LOW);
+
+    if (r > l)
+    {
+        digitalWrite(LED_1, HIGH);
+        Tright();
+        digitalWrite(LED_1, LOW);
+    }
+    if (l > r)
+    {
+        digitalWrite(LED_2, HIGH);
+        Tleft();
+        digitalWrite(LED_2, LOW);
+    }
+    if (l == r)
+    {
+        Stop(2000);
     }
 }
