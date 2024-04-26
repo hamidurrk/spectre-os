@@ -1,3 +1,3 @@
-# Thunder LFR OS
+# Haunt LFR OS
 
-Thunder is an OS programmed for line follower robots for advanced control.
+Haunt is an OS programmed for line follower robots for advanced control.
